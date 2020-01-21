@@ -1,0 +1,63 @@
+{
+  "actions": [
+    {
+      "description": "Default Greetings Intent",
+      "name": "MAIN",
+      "fulfillment": {
+        "conversationName": "conversation"
+      },
+      "intent": {
+        "name": "actions.intent.MAIN"
+      }
+    },
+    {
+      "description": "next",
+      "name": "next",
+      "fulfillment": {
+        "conversationName": "conversation"
+      },
+      "intent": {
+        "name": "next",
+        "trigger": {
+          "queryPatterns": [
+            "next",
+            "Next",
+            "play next song",
+            "play next title"
+          ]
+        }
+      }
+    },
+    {
+      "description": "previous",
+      "name": "previous",
+      "fulfillment": {
+        "conversationName": "conversation"
+      },
+      "intent": {
+        "name": "previous",
+        "parameters": [
+          {
+            "name": "text",
+            "type": "org.schema.type.Color"
+          }
+        ],
+        "trigger": {
+          "queryPatterns": [
+            "previous",
+            "Previous",
+            "play previous song",
+            "play previous title"
+          ]
+        }
+      }
+    }
+  ],
+  "conversations": {
+    "conversation": {
+      "name": "conversation",
+      "url": "https://demo-office.pocketbroker.co/mark/rest_public/convo/v1/google-actions/musicplayertest"
+    }
+  },
+  "locale": "en"
+}

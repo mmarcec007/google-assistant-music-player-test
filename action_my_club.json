@@ -1,0 +1,63 @@
+{
+  "actions": [
+    {
+      "description": "Default Greetings Intent",
+      "name": "MAIN",
+      "fulfillment": {
+        "conversationName": "conversation"
+      },
+      "intent": {
+        "name": "actions.intent.MAIN",
+        "parameters": [
+          {
+            "name": "text",
+            "type": "org.schema.type.Text"
+          }
+        ]
+      }
+    },
+    {
+      "description": "next",
+      "name": "next",
+      "fulfillment": {
+        "conversationName": "conversation"
+      },
+      "intent": {
+        "name": "next",
+        "trigger": {
+          "queryPatterns": [
+            "next",
+            "Next",
+            "play next song",
+            "play next title"
+          ]
+        }
+      }
+    },
+    {
+      "description": "previous",
+      "name": "previous",
+      "fulfillment": {
+        "conversationName": "conversation"
+      },
+      "intent": {
+        "name": "previous",
+        "trigger": {
+          "queryPatterns": [
+            "previous",
+            "Previous",
+            "play previous song",
+            "play previous title"
+          ]
+        }
+      }
+    }
+  ],
+  "conversations": {
+    "conversation": {
+      "name": "conversation",
+      "url": "https://us-central1-kn-vucetinec-1565962572259.cloudfunctions.net/webhook"
+    }
+  },
+  "locale": "en"
+}
