@@ -40,7 +40,24 @@ const getMediaResponse = (text, mp3Url) => {
                 "possibleIntents": [
                     {
                         "intent": "actions.intent.TEXT"
+                    },
+                    {
+                        "intent": "next"
+                    },
+                    {
+                        "intent": "previous"
                     }
+                ],
+                "speechBiasingHints": [
+                    "media",
+                    "next",
+                    "Next",
+                    "play next song",
+                    "play next title",
+                    "previous",
+                    "Previous",
+                    "play previous song",
+                    "play previous title"
                 ],
                 "inputPrompt": {
                     "richInitialPrompt": {
