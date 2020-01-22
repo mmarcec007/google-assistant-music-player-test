@@ -32,7 +32,7 @@ const getSimpleResponse = (simpleResponseText, expectUserInput) => {
 };
 
 const getMediaResponse = (text, mp3Url) => {
-    const fileName = url.substring(url.lastIndexOf('/')+1);
+    const fileName = mp3Url.substring(mp3Url.lastIndexOf('/')+1);
     return {
         "expectUserResponse": true,
         "expectedInputs": [
@@ -56,9 +56,7 @@ const getMediaResponse = (text, mp3Url) => {
                                     "mediaType": "AUDIO",
                                     "mediaObjects": [
                                         {
-                                            "contentUrl": mp3Url,
-                                            "title": fileName,
-                                            "description": mp3Url
+                                            "contentUrl": mp3Url
                                         }
                                     ]
                                 }
@@ -909,7 +907,7 @@ exports.webhook = functions.https.onRequest((req, resp) => {
                         result = getSuggestionsResponse("I didn't understand that. Please choose something from the suggestions.", true);
                     }
                 } else if (userIntentInput && userIntentInput.name === 'CONFIRMATION') {
-                    let textualValue = "I didn't catch that.";
+                    let textualValue = "I didn't catch that.";g
                     if (req.body.inputs[0].arguments[1] && req.body.inputs[0].arguments[1].name === 'text' ) {
                         textualValue = req.body.inputs[0].arguments[1].textValue;
                     }
