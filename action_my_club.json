@@ -56,7 +56,31 @@
   "conversations": {
     "conversation": {
       "name": "conversation",
-      "url": "https://us-central1-kn-vucetinec-1565962572259.cloudfunctions.net/webhook"
+      "url": "https://us-central1-kn-vucetinec-1565962572259.cloudfunctions.net/webhook",
+      "inDialogIntents": [
+        {
+          "name": "next",
+          "trigger": {
+            "queryPatterns": [
+              "next",
+              "Next",
+              "play next song",
+              "play next title"
+            ]
+          }
+        },
+        {
+          "name": "previous",
+          "trigger": {
+            "queryPatterns": [
+              "previous",
+              "Previous",
+              "play previous song",
+              "play previous title"
+            ]
+          }
+        }
+      ]
     }
   },
   "locale": "en"
