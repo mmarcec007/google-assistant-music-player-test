@@ -152,3 +152,15 @@ exports.webhook = functions.https.onRequest((req, resp) => {
     actionsSdkResponse.log(req, result);
     resp.send(result);
 });
+
+
+// dialog flow related responses
+// todo implement few responses
+
+// dialog flow related web hook
+
+exports.dialogFlowWebhook = functions.https.onRequest((req, resp) => {
+    let result = "";
+
+    resp.send(result);
+});
