@@ -68,6 +68,11 @@ const getMediaResponse = (text, mp3Url) => {
                                 }
                             },
                             {
+                                "simpleResponse": {
+                                    "textToSpeech": "Next title:"
+                                }
+                            },
+                            {
                                 "name": "Test " + fileName,
                                 "mediaResponse": {
                                     "mediaType": "AUDIO",
@@ -345,15 +350,6 @@ const getCarouselResponse = () => {
             }
         ],
        "conversationToken": "{\"data\":{\"firstNum\":23}}"
-    }
-};
-
-const traverse = function(o, fn) {
-    for (let i in o) {
-        fn.apply(this, [i, o[i]]);
-        if (o[i] !== null && typeof(o[i]) === "object") {
-            traverse(o[i], fn);
-        }
     }
 };
 
@@ -924,7 +920,7 @@ exports.webhook = functions.https.onRequest((req, resp) => {
                         result = getSuggestionsResponse("I didn't understand that. Please choose something from the suggestions.", true);
                     }
                 } else if (userIntentInput && userIntentInput.name === 'CONFIRMATION') {
-                    let textualValue = "I didn't catch that.";g
+                    let textualValue = "I didn't catch that.";
                     if (req.body.inputs[0].arguments[1] && req.body.inputs[0].arguments[1].name === 'text' ) {
                         textualValue = req.body.inputs[0].arguments[1].textValue;
                     }
