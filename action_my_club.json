@@ -51,12 +51,30 @@
           ]
         }
       }
+    },
+    {
+      "description": "random",
+      "name": "random",
+      "fulfillment": {
+        "conversationName": "conversation"
+      },
+      "intent": {
+        "name": "random",
+        "trigger": {
+          "queryPatterns": [
+            "random"
+          ]
+        }
+      }
     }
   ],
   "conversations": {
     "conversation": {
       "name": "conversation",
       "url": "https://us-central1-kn-vucetinec-1565962572259.cloudfunctions.net/webhook",
+      "httpHeaders": {
+        "x-api-key": "mySuperSecretKey"
+      },
       "inDialogIntents": [
         {
           "name": "next",
@@ -79,6 +97,20 @@
               "play previous title"
             ]
           }
+        },
+        {
+          "name": "random",
+          "trigger": {
+            "queryPatterns": [
+              "random"
+            ]
+          }
+        },
+        {
+          "name": "actions.intent.TEXT"
+        },
+        {
+          "name": "actions.intent.CANCEL"
         }
       ]
     }
