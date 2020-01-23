@@ -95,9 +95,7 @@ exports.getMediaResponse = (text, mp3Url) => {
             }
         ],
         "conversationToken": "{\"data\":" +
-        "{\"previousSong\":"+currentItem >= 0 ? mp3Files[currentItem] : mp3Files[0]+", " +
-        "\"nextSong\":"+currentItem === mp3Files.length  ? mp3Files[0] : mp3Files[currentItem]+", " +
-            "}" +
+        "{\"previousSong\":"+0+", " + "}" +
             "}"
     }
 };
