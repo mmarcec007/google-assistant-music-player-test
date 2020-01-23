@@ -56,7 +56,31 @@
   "conversations": {
     "conversation": {
       "name": "conversation",
-      "url": "https://demo-office.pocketbroker.co/mark/rest_public/convo/v1/google-actions/musicplayertest"
+      "url": "https://demo-office.pocketbroker.co/mark/rest_public/convo/v1/google-actions/musicplayertest",
+      "inDialogIntents": [
+        {
+          "name": "next",
+          "trigger": {
+            "queryPatterns": [
+              "next",
+              "Next",
+              "play next song",
+              "play next title"
+            ]
+          }
+        },
+        {
+          "name": "previous",
+          "trigger": {
+            "queryPatterns": [
+              "previous",
+              "Previous",
+              "play previous song",
+              "play previous title"
+            ]
+          }
+        }
+      ]
     }
   },
   "locale": "en"
