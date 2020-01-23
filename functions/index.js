@@ -166,11 +166,10 @@ exports.dialogFlowWebhook = functions.https.onRequest((req, resp) => {
     const conversation = req.body.originalDetectIntentRequest.payload.conversation;
 
     if (conversation.type === 'NEW') {
-        result = dialogFlowResponse.getSimpleResponse("Hi there!", true);
+        result = dialogFlowResponse.getSimpleResponse("Hi there! Welcome to Custom Music Player on Dialogflow.", true);
     } else if (conversation.type === 'ACTIVE') {
         result = dialogFlowResponse.getSimpleResponse("Lets play some music!", true);
     }
-    console.log(JSON.stringify(req));
-    console.log(JSON.stringify(result));
+
     resp.send(result);
 });
