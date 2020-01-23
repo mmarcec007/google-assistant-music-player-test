@@ -56,7 +56,7 @@
   "conversations": {
     "conversation": {
       "name": "conversation",
-      "url": "https://demo-office.pocketbroker.co/mark/rest_public/convo/v1/google-actions/musicplayertest",
+      "url": "https://demo-office.pocketbroker.co/mark/rest_public/convo/v1/service-run/google-actions/a/cross-music-player-v1",
       "inDialogIntents": [
         {
           "name": "next",
