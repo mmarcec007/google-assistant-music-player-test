@@ -2,6 +2,7 @@
 
 const functions = require('firebase-functions');
 const actionsSdkResponse = require('./responses/actions-sdk/actions-sdk');
+const dialogFlowResponse = require('./responses/dialogflow/dialogflow');
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
@@ -21,6 +22,7 @@ const mp3Files = [
     "https://mp3-utopian-plane.s3.eu-central-1.amazonaws.com/04-nowhere-az-few-far-between-320kbps.mp3",
     "https://storage.googleapis.com/automotive-media/Jazz_In_Paris.mp3"
 ];
+
 let currentItem = 0;
 let wasBrowseCarouselCalled = false;
 
@@ -60,7 +62,7 @@ exports.webhook = functions.https.onRequest((req, resp) => {
     } else if (req.body.conversation.type === 'ACTIVE') {
         if (req.body.inputs) {
             let userInput = req.body.inputs[0].rawInputs[0].query;
-            let userIntentInput = req.body.inputs[0].arguments[0];
+            let userIntentInput = req.body.inputs[0].arguments ?req.body.inputs[0].arguments[0] : null;
             console.log("user input:");
             console.log(userInput);
             if (userInput) {
@@ -160,7 +162,15 @@ exports.webhook = functions.https.onRequest((req, resp) => {
 // dialog flow related web hook
 
 exports.dialogFlowWebhook = functions.https.onRequest((req, resp) => {
-    let result = "";
+    let result = dialogFlowResponse.getSimpleResponse("I don't understand you well.", true);
+    const conversation = req.body.originalDetectIntentRequest.payload.conversation;
 
+    if (conversation.type === 'NEW') {
+        result = dialogFlowResponse.getSimpleResponse("Hi there!", true);
+    } else if (conversation.type === 'ACTIVE') {
+        result = dialogFlowResponse.getSimpleResponse("Lets play some music!", true);
+    }
+    console.log(JSON.stringify(req));
+    console.log(JSON.stringify(result));
     resp.send(result);
 });
