@@ -74,7 +74,8 @@ exports.getMediaResponse = (text, mp3Url) => {
                                     "mediaObjects": [
                                         {
                                             "contentUrl": mp3Url,
-                                            "description": fileName,
+                                            "name": fileName,
+                                            "description": mp3Url,
                                             "largeImage": {
                                                 "url": "https://media.giphy.com/media/8wz2omZEbVzSU/giphy.gif",
                                                 "accessibilityText": fileName
