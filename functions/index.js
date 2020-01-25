@@ -1,7 +1,7 @@
 'use strict';
 
 const functions = require('firebase-functions');
-const demoShowcase = require('./impl/demo/demo-showcase');
+const demoShowcase = require('./impl/actions-sdk/demo/demo-showcase');
 const dialogFlowResponse = require('./responses/dialogflow/dialogflow');
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions

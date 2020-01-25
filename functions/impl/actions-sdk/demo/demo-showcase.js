@@ -1,4 +1,4 @@
-const actionsSdkResponse = require('../../responses/actions-sdk/actions-sdk');
+const actionsSdkResponse = require('../../../responses/actions-sdk/actions-sdk');
 const mp3Files = [
     "https://mp3-utopian-plane.s3.eu-central-1.amazonaws.com/01-freeky.mp3",
     "https://mp3-utopian-plane.s3.eu-central-1.amazonaws.com/02-hot.mp3",
