@@ -1,7 +1,11 @@
 
 exports.getSimpleResponse = (simpleResponseText, expectUserInput) => {
-    return {
+    let response = {
         "expectUserResponse": expectUserInput,
+        "conversationToken": "{\"data\":{\"firstNum\":23}}"
+    };
+
+    let obj = {
         "expectedInputs": [
             {
                 "inputPrompt": {
@@ -21,9 +25,31 @@ exports.getSimpleResponse = (simpleResponseText, expectUserInput) => {
                     }
                 ]
             }
-        ],
-        "conversationToken": "{\"data\":{\"firstNum\":23}}"
+        ]
     };
+
+    if (!expectUserInput) {
+        obj = {
+            "finalResponse": {
+                "richResponse": {
+                    "items":[
+                        {
+                            "name": "Final",
+                            "simpleResponse": {
+                                "textToSpeech": simpleResponseText,
+                                "displayText": simpleResponseText
+                            }
+                        }
+                    ]
+                }
+            }
+        };
+        response.finalResponse = obj.finalResponse;
+    } else {
+        response.expectedInputs = obj.expectedInputs
+    }
+
+    return response;
 };
 
 exports.getMediaResponse = (text, mp3Url) => {
