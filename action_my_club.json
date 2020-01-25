@@ -17,52 +17,19 @@
       }
     },
     {
-      "description": "next",
-      "name": "next",
+      "description": "Show Match Results",
+      "name": "MATCH_RESULTS",
       "fulfillment": {
         "conversationName": "conversation"
       },
       "intent": {
-        "name": "next",
+        "name": "com.mark.dev.MATCH_RESULTS",
         "trigger": {
           "queryPatterns": [
-            "next",
-            "Next",
-            "play next song",
-            "play next title"
-          ]
-        }
-      }
-    },
-    {
-      "description": "previous",
-      "name": "previous",
-      "fulfillment": {
-        "conversationName": "conversation"
-      },
-      "intent": {
-        "name": "previous",
-        "trigger": {
-          "queryPatterns": [
-            "previous",
-            "Previous",
-            "play previous song",
-            "play previous title"
-          ]
-        }
-      }
-    },
-    {
-      "description": "random",
-      "name": "random",
-      "fulfillment": {
-        "conversationName": "conversation"
-      },
-      "intent": {
-        "name": "random",
-        "trigger": {
-          "queryPatterns": [
-            "random"
+            "show match results",
+            "results",
+            "results of match",
+            "match results"
           ]
         }
       }
