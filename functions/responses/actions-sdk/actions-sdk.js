@@ -614,7 +614,7 @@ exports.getSignInResponse = () => {
     }
 };
 
-exports.getTableResponse = () => {
+exports.getTableResponse = (simpleResponseText) => {
     return {
         "expectUserResponse": true,
         "conversationToken": "{\"data\":{\"firstNum\":23}}",
@@ -625,7 +625,7 @@ exports.getTableResponse = () => {
                         "items": [
                             {
                                 "simpleResponse": {
-                                    "textToSpeech": "Simple Responses must be included."
+                                    "textToSpeech": simpleResponseText
                                 }
                             },
                             {

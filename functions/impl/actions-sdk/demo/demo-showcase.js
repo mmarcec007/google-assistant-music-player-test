@@ -106,7 +106,7 @@ exports.demoImpl = (req, resp) => {
                     } else if (userInput === 'sign in') {
                         result = actionsSdkResponse.getSignInResponse();
                     } else if (userInput === 'table') {
-                        result = actionsSdkResponse.getTableResponse();
+                        result = actionsSdkResponse.getTableResponse("Table text");
                     } else if (userInput === 'transaction requirements') {
                         result = actionsSdkResponse.getTransactionRequirementsResponse()
                     } else if (userInput === 'order update') {
