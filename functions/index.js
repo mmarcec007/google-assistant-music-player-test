@@ -2,13 +2,15 @@
 
 const functions = require('firebase-functions');
 const demoShowcase = require('./impl/actions-sdk/demo/demo-showcase');
+const myClub = require('./impl/actions-sdk/my-club');
 const dialogFlowResponse = require('./responses/dialogflow/dialogflow');
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
 
 exports.webhook = functions.https.onRequest((req, resp) => {
-    demoShowcase.demoImpl(req, resp);
+    // demoShowcase.demoImpl(req, resp);
+    myClub.myClubImpl(req, resp);
 });
 
 exports.dialogFlowWebhook = functions.https.onRequest((req, resp) => {
