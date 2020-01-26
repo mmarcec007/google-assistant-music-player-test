@@ -652,7 +652,12 @@ exports.getTableResponse = (simpleResponseText) => {
                             {
                                 "simpleResponse": {
                                     "textToSpeech": simpleResponseText
-                                }
+                                },
+                            },
+                            {
+                                "simpleResponse": {
+                                    "textToSpeech": "More info available on your device."
+                                },
                             },
                             {
                                 "tableCard": {
