@@ -1,4 +1,6 @@
 const actionsSdkResponse = require('../../../responses/actions-sdk/actions-sdk');
+const jsonExtractor = require('./helper/json-extractor');
+const baseSuggestions = require('./data/base-suggestions');
 
 exports.myClubImpl = (req, resp) => {
     let text = "I couldn't understand that.";
@@ -37,8 +39,9 @@ exports.myClubImpl = (req, resp) => {
     } else if (conversation.type === 'ACTIVE') {
         if (userInputs) {
             const userRawInputQuery = userInputs[0].rawInputs[0].query;
+            const suggestions = jsonExtractor.getValuesFromJson('suggestions', baseSuggestions);
             if (userRawInputQuery) {
-                response = actionsSdkResponse.getSimpleResponse(userRawInputQuery, true);
+                response = actionsSdkResponse.getSuggestionsResponse(userRawInputQuery, suggestions);
             }
         }
     }
