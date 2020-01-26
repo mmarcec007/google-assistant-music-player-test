@@ -34,6 +34,27 @@
           ]
         }
       }
+    },
+    {
+      "description": "Show Matches",
+      "name": "MATCHES",
+      "fulfillment": {
+        "conversationName": "conversation"
+      },
+      "intent": {
+        "name": "com.mark.dev.MATCHES",
+        "trigger": {
+          "queryPatterns": [
+            "show matches",
+            "matches",
+            "matches of the season",
+            "matches of the month",
+            "get matches of the month",
+            "get matches",
+            "match results"
+          ]
+        }
+      }
     }
   ],
   "conversations": {
