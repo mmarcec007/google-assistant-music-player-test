@@ -828,7 +828,8 @@ exports.getOrderUpdateResponse = () => {
     }
 };
 
-exports.getSuggestionsResponse = (simpleResponseText) => {
+exports.getSuggestionsResponse = (simpleResponseText, suggestions) => {
+
     return {
         "expectUserResponse": true,
         "conversationToken": "{\"data\":{\"firstNum\":23}}",
@@ -843,32 +844,7 @@ exports.getSuggestionsResponse = (simpleResponseText) => {
                                 }
                             }
                         ],
-                        "suggestions": [
-                            {
-                                "title": "Basic Card"
-                            },
-                            {
-                                "title": "Browse Carousel"
-                            },
-                            {
-                                "title": "Carousel"
-                            },
-                            {
-                                "title": "List"
-                            },
-                            {
-                                "title": "Media"
-                            },
-                            {
-                                "title": "Link Out Suggestion"
-                            },
-                            {
-                                "title": "Place"
-                            },
-                            {
-                                "title": "Table"
-                            }
-                        ]
+                        "suggestions": suggestions
                     }
                 },
                 "possibleIntents": [
