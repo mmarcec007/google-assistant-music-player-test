@@ -28,6 +28,7 @@
           "queryPatterns": [
             "show match results",
             "results",
+            "get results",
             "results of match",
             "match results"
           ]
