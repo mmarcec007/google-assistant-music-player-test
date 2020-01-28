@@ -734,6 +734,11 @@ exports.getTableResponse = (simpleResponseText) => {
                                     ]
                                 }
                             }
+                        ],
+                        "suggestions": [
+                            {
+                                "title": "Back"
+                            }
                         ]
                     }
                 },
