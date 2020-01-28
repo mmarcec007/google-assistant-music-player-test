@@ -1,28 +1,13 @@
 {
   "suggestions": [
     {
-      "title": "Basic Card"
+      "title": "results"
     },
     {
-      "title": "Browse Carousel"
+      "title": "matches"
     },
     {
-      "title": "Carousel"
-    },
-    {
-      "title": "List"
-    },
-    {
-      "title": "Media"
-    },
-    {
-      "title": "Link Out Suggestion"
-    },
-    {
-      "title": "Place"
-    },
-    {
-      "title": "Table"
+      "title": "Ok, goodbye."
     }
   ]
 }
