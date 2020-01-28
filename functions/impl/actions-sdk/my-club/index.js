@@ -1,6 +1,7 @@
 const actionsSdkResponse = require('../../../responses/actions-sdk/actions-sdk');
 const jsonExtractor = require('./helper/json-extractor');
 const baseSuggestions = require('./data/base-suggestions');
+const suggestions = jsonExtractor.getValuesFromJson('suggestions', baseSuggestions);
 
 exports.myClubImpl = (req, resp) => {
     let text = "I couldn't understand that.";
@@ -34,14 +35,24 @@ exports.myClubImpl = (req, resp) => {
         }
         // otherwise add a greeting message
         else {
-            response = actionsSdkResponse.getSimpleResponse(text, true);
+            response = actionsSdkResponse.getSuggestionsResponse(text, suggestions);
         }
     } else if (conversation.type === 'ACTIVE') {
         if (userInputs) {
-            const userRawInputQuery = userInputs[0].rawInputs[0].query;
-            const suggestions = jsonExtractor.getValuesFromJson('suggestions', baseSuggestions);
-            if (userRawInputQuery) {
-                response = actionsSdkResponse.getSuggestionsResponse(userRawInputQuery, suggestions);
+            const userRawInputQuery = userInputs[0].rawInputs[0].query.toLowerCase();
+            const intent = userInputs[0].intent;
+            if (suggestions[0].title.toLowerCase() === userRawInputQuery) {
+                text = "Here are the results of the following match:";
+                response = actionsSdkResponse.getTableResponse(text);
+            } else if (suggestions[1].title.toLowerCase() === userRawInputQuery) {
+                text = "Here are the requested matches:";
+                response = actionsSdkResponse.getTableResponse(text);
+            } else if (userRawInputQuery === 'back') {
+                text = "Is there anything else?";
+                response = actionsSdkResponse.getSuggestionsResponse(text, suggestions);
+            }  else {
+                text = "I didn't understand that. Please choose something from the suggestions.";
+                response = actionsSdkResponse.getSuggestionsResponse(text, suggestions);
             }
 
             if (intent === 'actions.intent.CANCEL') {
