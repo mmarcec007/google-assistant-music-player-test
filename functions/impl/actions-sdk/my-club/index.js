@@ -43,6 +43,10 @@ exports.myClubImpl = (req, resp) => {
             if (userRawInputQuery) {
                 response = actionsSdkResponse.getSuggestionsResponse(userRawInputQuery, suggestions);
             }
+
+            if (intent === 'actions.intent.CANCEL') {
+                response = actionsSdkResponse.getSimpleResponse("Ok, have a nice day.", false);
+            }
         }
     }
 

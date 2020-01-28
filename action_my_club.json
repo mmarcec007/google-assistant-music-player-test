@@ -97,6 +97,9 @@
         },
         {
           "name": "actions.intent.TEXT"
+        },
+        {
+          "name": "actions.intent.CANCEL"
         }
       ]
     }
