@@ -4,105 +4,12 @@
       "description": "Default Greetings Intent",
       "name": "MAIN",
       "fulfillment": {
-        "conversationName": "conversation"
+        "useDialogflowFulfillment": true
       },
       "intent": {
-        "name": "actions.intent.MAIN",
-        "parameters": [
-          {
-            "name": "text",
-            "type": "org.schema.type.Text"
-          }
-        ]
-      }
-    },
-    {
-      "description": "Show Match Results",
-      "name": "MATCH_RESULTS",
-      "fulfillment": {
-        "conversationName": "conversation"
-      },
-      "intent": {
-        "name": "com.mark.dev.MATCH_RESULTS",
-        "trigger": {
-          "queryPatterns": [
-            "show match results",
-            "results",
-            "get results",
-            "results of match",
-            "match results"
-          ]
-        }
-      }
-    },
-    {
-      "description": "Show Matches",
-      "name": "MATCHES",
-      "fulfillment": {
-        "conversationName": "conversation"
-      },
-      "intent": {
-        "name": "com.mark.dev.MATCHES",
-        "trigger": {
-          "queryPatterns": [
-            "show matches",
-            "matches",
-            "matches of the season",
-            "matches of the month",
-            "get matches of the month",
-            "get matches",
-            "match results"
-          ]
-        }
+        "name": "actions.intent.MAIN"
       }
     }
   ],
-  "conversations": {
-    "conversation": {
-      "name": "conversation",
-      "url": "https://us-central1-kn-vucetinec-1565962572259.cloudfunctions.net/webhook",
-      "httpHeaders": {
-        "x-api-key": "mySuperSecretKey"
-      },
-      "inDialogIntents": [
-        {
-          "name": "next",
-          "trigger": {
-            "queryPatterns": [
-              "next",
-              "Next",
-              "play next song",
-              "play next title"
-            ]
-          }
-        },
-        {
-          "name": "previous",
-          "trigger": {
-            "queryPatterns": [
-              "previous",
-              "Previous",
-              "play previous song",
-              "play previous title"
-            ]
-          }
-        },
-        {
-          "name": "random",
-          "trigger": {
-            "queryPatterns": [
-              "random"
-            ]
-          }
-        },
-        {
-          "name": "actions.intent.TEXT"
-        },
-        {
-          "name": "actions.intent.CANCEL"
-        }
-      ]
-    }
-  },
   "locale": "en"
 }
