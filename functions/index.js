@@ -57,3 +57,7 @@ exports.dialogFlowWebhook = functions.https.onRequest((req, resp) => {
     dialogFlowResponse.log(req, result);
     resp.send(result);
 });
+
+exports.dialogFlowMessengerWebhook = functions.https.onRequest((req, resp) => {
+    resp.send("someTestEcho")
+});
