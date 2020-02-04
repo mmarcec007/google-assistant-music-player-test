@@ -4,12 +4,67 @@
       "description": "Default Greetings Intent",
       "name": "MAIN",
       "fulfillment": {
-        "useDialogflowFulfillment": true
+        "conversationName": "conversation"
       },
       "intent": {
-        "name": "actions.intent.MAIN"
+        "name": "actions.intent.MAIN",
+        "parameters": [
+          {
+            "name": "text",
+            "type": "org.schema.type.Text"
+          }
+        ]
+      }
+    },
+    {
+      "description": "Show Match Results",
+      "name": "MATCH_RESULTS",
+      "fulfillment": {
+        "conversationName": "conversation"
+      },
+      "intent": {
+        "name": "com.mark.dev.MATCH_RESULTS",
+        "trigger": {
+          "queryPatterns": [
+            "show match results",
+            "results",
+            "get results",
+            "results of match",
+            "match results"
+          ]
+        }
+      }
+    },
+    {
+      "description": "Show Matches",
+      "name": "MATCHES",
+      "fulfillment": {
+        "conversationName": "conversation"
+      },
+      "intent": {
+        "name": "com.mark.dev.MATCHES",
+        "trigger": {
+          "queryPatterns": [
+            "show matches",
+            "matches",
+            "matches of the season",
+            "matches of the month",
+            "get matches of the month",
+            "get matches",
+            "match results"
+          ]
+        }
       }
     }
   ],
+  "conversations": {
+    "conversation": {
+      "name": "conversation",
+      "url": "https://us-central1-kn-vucetinec-1565962572259.cloudfunctions.net/webhook",
+      "httpHeaders": {
+        "x-api-key": "mySuperSecretKey"
+      }
+    }
+  },
   "locale": "en"
 }
