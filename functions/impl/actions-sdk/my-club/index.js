@@ -39,7 +39,8 @@ exports.myClubImpl = (req, resp) => {
         }
     } else if (conversation.type === 'ACTIVE') {
         if (userInputs) {
-            const userRawInputQuery = userInputs[0].rawInputs[0].query.toLowerCase();
+            const userRawInputQuery = req.body.detectedIntent !== null ?
+                req.body.detectedIntent.toLowerCase() : userInputs[0].rawInputs[0].query.toLowerCase();
             const intent = userInputs[0].intent;
             if (suggestions[0].title.toLowerCase() === userRawInputQuery) {
                 text = "Here are the results of the following match:";
