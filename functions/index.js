@@ -3,61 +3,37 @@
 const functions = require('firebase-functions');
 const demoShowcase = require('./impl/actions-sdk/demo/demo-showcase');
 const myClub = require('./impl/actions-sdk/my-club');
-const dialogFlowResponse = require('./responses/dialogflow/dialogflow');
+const dialogFlow = require('./external-api/dialogflow');
+const auth = require('./external-api/authorization');
+
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
 
-exports.webhook = functions.https.onRequest((req, resp) => {
+let accessToken = "";
+
+exports.webhook = functions.https.onRequest(async (req,  resp) => {
     // demoShowcase.demoImpl(req, resp);
-    myClub.myClubImpl(req, resp);
-});
+    const userInputs = req.body.inputs;
+    const textToAnalyze = userInputs[0].rawInputs[0].query;
 
-const mp3Files = [
-    "https://mp3-utopian-plane.s3.eu-central-1.amazonaws.com/01-freeky.mp3",
-    "https://mp3-utopian-plane.s3.eu-central-1.amazonaws.com/02-hot.mp3",
-    "https://mp3-utopian-plane.s3.eu-central-1.amazonaws.com/02-kitty-doesnt-like-320kbps.mp3",
-    "https://mp3-utopian-plane.s3.eu-central-1.amazonaws.com/03-shit.mp3",
-    "https://mp3-utopian-plane.s3.eu-central-1.amazonaws.com/03-talking-kitty-cat-stupid-stupid-world-320kbps.mp3",
-    "https://mp3-utopian-plane.s3.eu-central-1.amazonaws.com/04-nowhere-az-few-far-between-320kbps.mp3",
-    "https://storage.googleapis.com/automotive-media/Jazz_In_Paris.mp3"
-];
-let currentIndex = 0;
-exports.dialogFlowWebhook = functions.https.onRequest((req, resp) => {
-    let result = dialogFlowResponse.getSimpleResponse("I don't understand you well.", true);
-    const conversation = req.body.originalDetectIntentRequest.payload.conversation;
+    let data = await dialogFlow.detectIntent(textToAnalyze, "en-US", "kn-vucetinec-1565962572259","adewf1234swdfge", accessToken);
 
-    if (conversation.type === 'NEW') {
-        result = dialogFlowResponse.getSimpleResponse("Hi there! Welcome to Custom Music Player on Dialogflow.", true);
-    } else if (conversation.type === 'ACTIVE') {
-        const userInput = req.body.queryResult.queryText;
-        const detectedIntent = req.body.queryResult.intent;
-
-
-        if (detectedIntent.displayName === "Media") {
-            result = dialogFlowResponse.getMediaResponse("Here you go:", mp3Files[currentIndex]);
-        } else if (detectedIntent.displayName === "Next") {
-            console.log("Next");
-            currentIndex++;
-            if (currentIndex >= mp3Files.length) {
-                currentIndex = 0;
-            }
-            result = dialogFlowResponse.getMediaResponse("Playing next title:", mp3Files[currentIndex]);
-        } else if (detectedIntent.displayName === "Previous") {
-            currentIndex++;
-            if (currentIndex <= mp3Files.length) {
-                currentIndex = 0;
-            }
-            result = dialogFlowResponse.getMediaResponse("Playing previous title:", mp3Files[currentIndex]);
-            console.log("Previous");
-        } else {
-            result = dialogFlowResponse.getSimpleResponse(userInput, true);
-        }
+    // if there is no response, the token is not valid
+    // then we get a new token and fetch the data once again
+    if (data === null) {
+        accessToken = await auth.getToken();
+        console.log("New token was generated!");
+        data = await dialogFlow.detectIntent(textToAnalyze, "en-US","kn-vucetinec-1565962572259","adewf1234swdfgs", accessToken)
     }
-    dialogFlowResponse.log(req, result);
-    resp.send(result);
-});
 
-exports.dialogFlowMessengerWebhook = functions.https.onRequest((req, resp) => {
-    resp.send("someTestEcho")
+    // if intent is not set the users input will be used as fallback for response
+    let detectedIntent = null;
+    if (data && data.queryResult) {
+        detectedIntent = data.queryResult.intent.displayName;
+    }
+
+    req.body.detectedIntent = detectedIntent;
+
+    myClub.myClubImpl(req, resp);
 });
