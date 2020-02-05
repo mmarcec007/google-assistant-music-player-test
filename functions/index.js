@@ -29,11 +29,14 @@ exports.webhook = functions.https.onRequest(async (req,  resp) => {
 
     // if intent is not set the users input will be used as fallback for response
     let detectedIntent = null;
+    let parameters = null;
     if (data && data.queryResult) {
         detectedIntent = data.queryResult.intent.displayName;
+        parameters = data.queryResult.parameters;
     }
 
     req.body.detectedIntent = detectedIntent;
+    req.body.parametersOfDetectedIntent = parameters;
 
     myClub.myClubImpl(req, resp);
 });
