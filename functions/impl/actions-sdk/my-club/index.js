@@ -42,11 +42,29 @@ exports.myClubImpl = (req, resp) => {
             const userRawInputQuery = req.body.detectedIntent !== null ?
                 req.body.detectedIntent.toLowerCase() : userInputs[0].rawInputs[0].query.toLowerCase();
             const intent = userInputs[0].intent;
+            const params = req.body.parametersOfDetectedIntent;
             if (suggestions[0].title.toLowerCase() === userRawInputQuery) {
                 text = "Here are the results of the following match:";
+                if (params !== null && params["date-period"]) {
+                    const datePeriodParam = params["date-period"];
+                    text = "Here are the following following results of played matches from " + datePeriodParam.startDate + " to " + datePeriodParam.endDate;
+                } else if (params !== null && params["date"]) {
+                    const dateParam = params["date"];
+                    text = "Here are the results of the following matches for the following date " + dateParam;
+                }
                 response = actionsSdkResponse.getTableResponse(text);
             } else if (suggestions[1].title.toLowerCase() === userRawInputQuery) {
                 text = "Here are the requested matches:";
+                if (params !== null && params["date-period"]) {
+                    const datePeriodParam = params["date-period"];
+                    text = "Here are the following matches from " + datePeriodParam.startDate + " to " + datePeriodParam.endDate;
+                } else if (params !== null && params["date"]) {
+                    const dateParam = params["date"];
+                    text = "Here are the following matches for the following date " + dateParam;
+                } else if (params !== null && params["number"]) {
+                    const numberParam = params["number"];
+                    text = "Here is the following match with the following id " + numberParam;
+                }
                 response = actionsSdkResponse.getTableResponse(text);
             } else if (userRawInputQuery === 'back') {
                 text = "Is there anything else?";
