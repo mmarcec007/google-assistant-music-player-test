@@ -63,7 +63,7 @@ exports.myClubImpl = (req, resp) => {
                     text = "Here are the following matches for the following date " + dateParam;
                 } else if (params !== null && params["number"]) {
                     const numberParam = params["number"];
-                    text = "Here is the following match with the following ID " + numberParam;
+                    text = "Here is the following match with ID of " + numberParam;
                 }
                 response = actionsSdkResponse.getTableResponse(text);
             } else if (userRawInputQuery === 'back') {
