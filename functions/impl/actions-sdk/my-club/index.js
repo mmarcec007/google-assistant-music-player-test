@@ -51,6 +51,9 @@ exports.myClubImpl = (req, resp) => {
                 } else if (params !== null && params["date"]) {
                     const dateParam = params["date"];
                     text = "Here are the results of the following matches for the following date " + dateParam;
+                } else if (params !== null && params["LastMatch"]) {
+                    const lastMatchParam = params["LastMatch"];
+                    text = "Here are the results of the last match with ID of " + lastMatchParam;
                 }
                 response = actionsSdkResponse.getTableResponse(text);
             } else if (suggestions[1].title.toLowerCase() === userRawInputQuery) {
