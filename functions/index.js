@@ -33,6 +33,8 @@ exports.webhook = functions.https.onRequest(async (req,  resp) => {
     if (data && data.queryResult && data.queryResult.intent) {
         detectedIntent = data.queryResult.intent.displayName;
         parameters = data.queryResult.parameters;
+    } else {
+        console.log("Intent was not found! I'm going to analyze raw user input.");
     }
 
     req.body.detectedIntent = detectedIntent;
