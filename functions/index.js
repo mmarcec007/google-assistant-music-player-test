@@ -24,7 +24,11 @@ exports.webhook = functions.https.onRequest(async (req,  resp) => {
     if (data === null) {
         accessToken = await auth.getToken();
         console.log("New token was generated!");
-        data = await dialogFlow.detectIntent(textToAnalyze, "en-US","kn-vucetinec-1565962572259","adewf1234swdfgs", accessToken)
+        data = await dialogFlow.detectIntent(textToAnalyze, "en-US","kn-vucetinec-1565962572259","adewf1234swdfgs", accessToken);
+
+        if (data === null) {
+            console.warn('Could\'t authenticate! I\'m going to analyze raw user input.')
+        }
     }
 
     // if intent is not set the users input will be used as fallback for response
@@ -34,7 +38,7 @@ exports.webhook = functions.https.onRequest(async (req,  resp) => {
         detectedIntent = data.queryResult.intent.displayName;
         parameters = data.queryResult.parameters;
     } else {
-        console.log("Intent was not found! I'm going to analyze raw user input.");
+        console.warn("Intent was not found! I'm going to analyze raw user input.");
     }
 
     req.body.detectedIntent = detectedIntent;
