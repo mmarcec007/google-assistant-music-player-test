@@ -53,7 +53,10 @@ exports.myClubImpl = (req, resp) => {
                     text = "Here are the results of the following matches for the following date " + dateParam;
                 } else if (params !== null && params["LastMatch"]) {
                     const lastMatchParam = params["LastMatch"];
-                    text = "Here are the results of the last match with ID of " + lastMatchParam;
+                    if (lastMatchParam === "true") {
+                        // todo prepare the data of the last match's results
+                        text = "Here are the results of the last match " + lastMatchParam;
+                    }
                 }
                 response = actionsSdkResponse.getTableResponse(text);
             } else if (suggestions[1].title.toLowerCase() === userRawInputQuery) {
@@ -67,6 +70,18 @@ exports.myClubImpl = (req, resp) => {
                 } else if (params !== null && params["number"]) {
                     const numberParam = params["number"];
                     text = "Here is the following match with ID of " + numberParam;
+                } else if (params !== null && params["LastMatch"]) {
+                    const lastMatchParam = params["LastMatch"];
+                    if (lastMatchParam === "true") {
+                        // todo prepare the data of the last match
+                        text = "Here is the last match " + lastMatchParam;
+                    }
+                } else if (params !== null && params["NextMatch"]) {
+                    const nextMatchParam = params["NextMatch"];
+                    if (nextMatchParam === "true") {
+                        // todo prepare the data of the last match
+                        text = "Here is the next match " + nextMatchParam;
+                    }
                 }
                 response = actionsSdkResponse.getTableResponse(text);
             } else if (userRawInputQuery === 'back') {
