@@ -30,7 +30,7 @@ exports.webhook = functions.https.onRequest(async (req,  resp) => {
     // if intent is not set the users input will be used as fallback for response
     let detectedIntent = null;
     let parameters = null;
-    if (data && data.queryResult) {
+    if (data && data.queryResult && data.queryResult.intent) {
         detectedIntent = data.queryResult.intent.displayName;
         parameters = data.queryResult.parameters;
     }
