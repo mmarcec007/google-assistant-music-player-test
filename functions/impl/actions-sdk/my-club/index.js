@@ -66,7 +66,7 @@ exports.myClubImpl = (req, resp) => {
                     text = "Here is the following match with ID of " + numberParam;
                 }
                 response = actionsSdkResponse.getTableResponse(text);
-            } else if (userRawInputQuery.includes('back')) {
+            } else if (userRawInputQuery === 'back') {
                 text = "Is there anything else?";
                 response = actionsSdkResponse.getSuggestionsResponse(text, suggestions);
             }  else {
