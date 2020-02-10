@@ -1,6 +1,6 @@
 const actionsSdkResponse = require('../../../responses/actions-sdk/actions-sdk');
-const jsonExtractor = require('./helper/json-extractor');
-const baseSuggestions = require('./data/base-suggestions');
+const jsonExtractor = require('../../core/helper/json-extractor');
+const baseSuggestions = require('../../core/data/base-suggestions');
 const suggestions = jsonExtractor.getValuesFromJson('suggestions', baseSuggestions);
 
 exports.myClubImpl = (req, resp) => {
