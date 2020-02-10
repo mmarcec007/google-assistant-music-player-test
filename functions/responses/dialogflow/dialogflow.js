@@ -56,6 +56,125 @@ exports.getMediaResponse = (text, mp3Url) => {
     }
 };
 
+exports.getTableResponse = (text) => {
+  return {
+      "payload": {
+          "google": {
+              "expectUserResponse": true,
+              "richResponse": {
+                  "items": [
+                      {
+                          "simpleResponse": {
+                              "textToSpeech": text
+                          }
+                      },
+                      {
+                          "tableCard": {
+                              "title": "Table Title",
+                              "subtitle": "Table Subtitle",
+                              "image": {
+                                  "url": "https://avatars0.githubusercontent.com/u/23533486",
+                                  "accessibilityText": "Actions on Google"
+                              },
+                              "rows": [
+                                  {
+                                      "cells": [
+                                          {
+                                              "text": "row 1 item 1"
+                                          },
+                                          {
+                                              "text": "row 1 item 2"
+                                          },
+                                          {
+                                              "text": "row 1 item 3"
+                                          }
+                                      ],
+                                      "dividerAfter": false
+                                  },
+                                  {
+                                      "cells": [
+                                          {
+                                              "text": "row 2 item 1"
+                                          },
+                                          {
+                                              "text": "row 2 item 2"
+                                          },
+                                          {
+                                              "text": "row 2 item 3"
+                                          }
+                                      ],
+                                      "dividerAfter": true
+                                  },
+                                  {
+                                      "cells": [
+                                          {
+                                              "text": "row 3 item 1"
+                                          },
+                                          {
+                                              "text": "row 3 item 2"
+                                          },
+                                          {
+                                              "text": "row 3 item 3"
+                                          }
+                                      ]
+                                  }
+                              ],
+                              "columnProperties": [
+                                  {
+                                      "header": "header 1",
+                                      "horizontalAlignment": "CENTER"
+                                  },
+                                  {
+                                      "header": "header 2",
+                                      "horizontalAlignment": "LEADING"
+                                  },
+                                  {
+                                      "header": "header 1",
+                                      "horizontalAlignment": "TRAILING"
+                                  }
+                              ],
+                              "buttons": [
+                                  {
+                                      "title": "Button Title",
+                                      "openUrlAction": {
+                                          "url": "https://github.com/actions-on-google"
+                                      }
+                                  }
+                              ]
+                          }
+                      }
+                  ],
+                  "suggestions": [
+                      {
+                          "title": "Back"
+                      }
+                  ]
+              }
+          }
+      }
+  }
+};
+
+exports.getSuggestionsResponse = (simpleResponseText, suggestions) => {
+    return {
+        "payload": {
+            "google": {
+                "expectUserResponse": true,
+                "richResponse": {
+                    "items": [
+                        {
+                            "simpleResponse": {
+                                "textToSpeech": simpleResponseText
+                            }
+                        }
+                    ],
+                    "suggestions": suggestions
+                }
+            }
+        }
+    }
+};
+
 
 exports.log = (req, result) => {
     console.info("request");

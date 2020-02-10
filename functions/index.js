@@ -3,6 +3,7 @@
 const functions = require('firebase-functions');
 const demoShowcase = require('./impl/actions-sdk/demo/demo-showcase');
 const myClub = require('./impl/actions-sdk/my-club');
+const myClubDialogFlow = require('./impl/dialogflow/my-club');
 const dialogFlow = require('./external-api/dialogflow');
 const auth = require('./external-api/authorization');
 
@@ -45,4 +46,9 @@ exports.webhook = functions.https.onRequest(async (req,  resp) => {
     req.body.parametersOfDetectedIntent = parameters;
 
     myClub.myClubImpl(req, resp);
+});
+
+
+exports.webhookDialogflow = functions.https.onRequest(async (req,  resp) => {
+    myClubDialogFlow.myClubImpl(req, resp)
 });
