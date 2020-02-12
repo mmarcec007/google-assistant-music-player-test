@@ -58,6 +58,8 @@ exports.myClubImpl = (req, resp) => {
                     }
                 }
                 response = dialogflowResponse.getTableResponse(text);
+            } else if (suggestions[2].title === detectedIntentName) {
+                response = dialogflowResponse.getListResponse();
             } else if (detectedIntentName === 'back') {
                 text = "Is there anything else?";
                 response = dialogflowResponse.getSuggestionsResponse(text, suggestions);
