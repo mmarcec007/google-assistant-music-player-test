@@ -59,7 +59,7 @@ exports.webhookForAlexa = functions.https.onRequest(async (req,  resp) => {
     console.log(req.body);
 
     // text to analyze is the detected intent provided by amazon request
-    let textToAnalyze = req.body.request.intent ? req.body.request.intent.name : "Unknown Intent";
+    let textToAnalyze = req.body.request.intent ? req.body.request.intent.slots.search.value : "Unknown Intent";
     let data = await dialogFlow.detectIntent(textToAnalyze, "en-US", "kn-vucetinec-1565962572259","alexa-adewf1234swdfge", accessToken);
 
     // if there is no response, the token is not valid
@@ -82,12 +82,12 @@ exports.webhookForAlexa = functions.https.onRequest(async (req,  resp) => {
         console.log("Results of Dialogflow intent detection:");
         console.log(data);
         detectedIntent = data.queryResult.intent.displayName;
-        parameters = req.body.request.intent ? req.body.request.intent.slots : null;
+        parameters = data.queryResult.parameters;
     } else {
         console.warn("Intent was not found! I'm going to analyze raw user input.");
     }
 
-    const result = alexaResponses.getSimpleResponse(parameters, detectedIntent, false);
+    const result = alexaResponses.getSimpleTestResponse(parameters, detectedIntent, false);
 
     console.log(result);
     resp.send(result);
