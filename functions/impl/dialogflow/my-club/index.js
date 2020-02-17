@@ -1,9 +1,10 @@
 const dialogflowResponse = require('../../../responses/dialogflow/dialogflow');
 const jsonExtractor = require('../../core/helper/json-extractor');
 const baseSuggestions = require('../../core/data/base-suggestions');
+const firebaseJson = require('../../../external-api/firebaseJson');
 const suggestions = jsonExtractor.getValuesFromJson('suggestions', baseSuggestions);
 
-exports.myClubImpl = (req, resp) => {
+exports.myClubImpl = async (req, resp) => {
     let text = "I couldn't understand that.";
     let response = dialogflowResponse.getSimpleResponse(text, true);
 
@@ -17,6 +18,7 @@ exports.myClubImpl = (req, resp) => {
         if (userInputs) {
             const detectedIntentName = req.body.queryResult.intent.displayName.toLowerCase();
             const params = req.body.queryResult.parameters;
+
             if (suggestions[0].title.toLowerCase() === detectedIntentName) {
                 text = "Here are the results of the following match:";
                 if (params !== null && params["date-period"]) {
@@ -59,10 +61,73 @@ exports.myClubImpl = (req, resp) => {
                 }
                 response = dialogflowResponse.getTableResponse(text);
             } else if (suggestions[2].title === detectedIntentName) {
-                response = dialogflowResponse.getListResponse();
+                const data = await firebaseJson.getTeams();
+
+                console.log("Printing data of teams: ");
+                console.log(data);
+                if (data) {
+                    text = "Here are the teams:";
+                    const teamsData = data.api.teams.slice(0, 29).map((team) => {
+                        return {
+                            optionInfo: {
+                                key: team.team_id,
+                                synonyms: [team.name]
+                            },
+                            title: team.name,
+                            description: team.venue_name,
+                            image: {
+                                url: team.logo,
+                                accessibilityText: team.name
+                            }
+                        }
+                    });
+                    response = dialogflowResponse.getListResponse(text, "Teams", teamsData);
+                } else {
+                    text = "Something went wrong! Please try again.";
+                    response = dialogflowResponse.getSuggestionsResponse(text, suggestions);
+                }
             } else if (detectedIntentName === 'back') {
                 text = "Is there anything else?";
                 response = dialogflowResponse.getSuggestionsResponse(text, suggestions);
+            } else if (detectedIntentName === "DefaultFallbackIntent".toLowerCase() && userInputs[0].intent === 'actions.intent.OPTION') {
+                console.log("Action System Intent: ");
+                console.log(userInputs[0].intent);
+
+                let teamID = -1;
+                if (userInputs[0].arguments[0].name === 'OPTION') {
+                    teamID = parseInt(userInputs[0].arguments[0].textValue, 10);
+                }
+
+                if (teamID > 0) {
+                    const team = await firebaseJson.getTeam(teamID);
+                    console.log("Here is the requested team: ");
+                    console.log(team);
+                    const singleItem = {
+                        title: team.name,
+                        subtitle: team.venue_name,
+                        formattedText: "More Details: " + " \n "
+                            + " \n Country: " + "***"+ team.country+"***" + " \n "
+                            + " \n Founded: " + "***"+ team.founded+"***" + " \n "
+                            + " \n Surface: " + "***"+ team.venue_surface+"***" + " \n "
+                            + " \n Address: " + "***"+ team.venue_address+"***" + " \n "
+                            + " \n City: " + "***"+ team.venue_city+"***" + " \n "
+                            + " \n Capacity: " + "***"+ team.venue_capacity+"***" + " \n ",
+                        image: {
+                            url: team.logo,
+                            accessibilityText: team.name
+                        },
+                        buttons: [
+                            {
+                                title: "This is a button",
+                                openUrlAction: {
+                                    url: "https://assistant.google.com/"
+                                }
+                            }
+                        ],
+                    };
+                    text = "Got value " + userInputs[0].arguments.textValue;
+                    response = dialogflowResponse.getBasicCardResponse(text, singleItem);
+                }
             }  else {
                 text = "I didn't understand that. Please choose something from the suggestions.";
                 response = dialogflowResponse.getSuggestionsResponse(text, suggestions);
