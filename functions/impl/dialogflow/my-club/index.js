@@ -125,7 +125,7 @@ exports.myClubImpl = async (req, resp) => {
                             }
                         ],
                     };
-                    text = "Got value " + userInputs[0].arguments.textValue;
+                    text = "Got team with name " + team.name;
                     response = dialogflowResponse.getBasicCardResponse(text, singleItem);
                 }
             }  else {
