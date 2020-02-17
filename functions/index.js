@@ -51,7 +51,7 @@ exports.webhook = functions.https.onRequest(async (req,  resp) => {
 
 
 exports.webhookDialogflow = functions.https.onRequest(async (req,  resp) => {
-    myClubDialogFlow.myClubImpl(req, resp)
+    await myClubDialogFlow.myClubImpl(req, resp)
 });
 
 exports.webhookForAlexa = functions.https.onRequest(async (req,  resp) => {
