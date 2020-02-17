@@ -175,8 +175,7 @@ exports.getSuggestionsResponse = (simpleResponseText, suggestions) => {
     }
 };
 
-
-exports.getListResponse = () => {
+exports.getListResponse = (text, listTitle, listSelectItems) => {
     return {
         "payload": {
             "google": {
@@ -185,7 +184,7 @@ exports.getListResponse = () => {
                     "items": [
                         {
                             "simpleResponse": {
-                                "textToSpeech": "Simple Responses must be included."
+                                "textToSpeech": text
                             }
                         }
                     ]
@@ -195,60 +194,32 @@ exports.getListResponse = () => {
                     "data": {
                         "@type": "type.googleapis.com/google.actions.v2.OptionValueSpec",
                         "listSelect": {
-                            "title": "Things to learn about",
-                            "items": [
-                                {
-                                    "optionInfo": {
-                                        "key": "MATH_AND_PRIME",
-                                        "synonyms": [
-                                            "math",
-                                            "math and prime",
-                                            "prime numbers",
-                                            "prime"
-                                        ]
-                                    },
-                                    "description": "42 is an abundant number",
-                                    "image": {
-                                        "url": "https://example.com/math_and_prime.jpg",
-                                        "accessibilityText": "Information about numbers"
-                                    },
-                                    "title": "Title of the First List Item"
-                                },
-                                {
-                                    "optionInfo": {
-                                        "key": "EGYPT",
-                                        "synonyms": [
-                                            "religion",
-                                            "egypt",
-                                            "ancient egyptian"
-                                        ]
-                                    },
-                                    "description": "42 gods ruled on the fate of the dead in the afterworld",
-                                    "image": {
-                                        "url": "http://example.com/egypt",
-                                        "accessibilityText": "Egypt"
-                                    },
-                                    "title": "Ancient Egyptian religion"
-                                },
-                                {
-                                    "optionInfo": {
-                                        "key": "RECIPES",
-                                        "synonyms": [
-                                            "recipes",
-                                            "recipe",
-                                            "42 recipes"
-                                        ]
-                                    },
-                                    "description": "A beautifully simple recipe",
-                                    "image": {
-                                        "url": "http://example.com/recipe",
-                                        "accessibilityText": "Recipe"
-                                    },
-                                    "title": "42 recipes in 42 ingredients"
-                                }
-                            ]
+                            "title": listTitle,
+                            "items": listSelectItems
                         }
                     }
+                }
+            }
+        }
+    }
+};
+
+exports.getBasicCardResponse = (text, singleItem) => {
+    return {
+        "payload": {
+            "google": {
+                "expectUserResponse": true,
+                "richResponse": {
+                    "items": [
+                        {
+                            "simpleResponse": {
+                                "textToSpeech": text
+                            }
+                        },
+                        {
+                            "basicCard": singleItem
+                        }
+                    ]
                 }
             }
         }
