@@ -67,3 +67,14 @@ exports.getLeagues = async () => {
         return null;
     })
 };
+
+exports.getLeague = async (id) => {
+    return firebaseStorageJsonApi.get('/responses%2Fleagues_of_england.json?alt=media&token=5e177a8d-01b4-49cc-81ae-c3d683d87a6a').then(response => {
+        console.log(response.data);
+        const queryString = 'api[**][*league_id='+id+']';
+        return jsonExtractor.getSingleValueFromJson(queryString, response.data);
+    }).catch(error => {
+        console.log(error);
+        return null;
+    })
+};
