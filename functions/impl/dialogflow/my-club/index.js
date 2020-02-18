@@ -280,6 +280,45 @@ exports.myClubImpl = async (req, resp) => {
                         text = "Got team with name " + team.name;
                         response = dialogflowResponse.getBasicCardResponse(text, singleItem);
                     }
+                } else if (selection > 0 && selectionType.includes('leagues')) {
+                    const league = await firebaseJson.getLeague(selection);
+                    if (league) {
+                        console.log("Here is the requested league: ");
+                        console.log(league);
+                        const singleItem = {
+                            title: league.name,
+                            subtitle: "ID " + league.league_id.toString(),
+                            formattedText: "More Details: " + " \n "
+                                + " \n Country: " + "***" + league.country + "***" + " \n "
+                                + " \n Season: " + "***" + league.season + "***" + " \n "
+                                + " \n Season Start: " + "***" + league.season_start + "***" + " \n "
+                                + " \n Season End: " + "***" + league.season_end + "***" + " \n "
+                                + " \n Standings: " + "***" + league.standings.toString() + "***" + " \n "
+                                + " \n Is current: " + "***" + league.is_current.toString() + "***" + " \n "
+                                + " \n Has fixture events: " + "***" + league.coverage.fixtures.events.toString() + "***" + " \n "
+                                + " \n Has fixture lineups: " + "***" + league.coverage.fixtures.lineups.toString() + "***" + " \n "
+                                + " \n Has fixture statistics: " + "***" + league.coverage.fixtures.statistics.toString() + "***" + " \n "
+                                + " \n Has fixture players statistics: " + "***" + league.coverage.fixtures.players_statistics.toString() + "***" + " \n "
+                                + " \n Has players: " + "***" + league.coverage.players.toString() + "***" + " \n "
+                                + " \n Has top scorers: " + "***" + league.coverage.topScorers.toString() + "***" + " \n "
+                                + " \n Has predictions: " + "***" + league.coverage.predictions.toString() + "***" + " \n "
+                                + " \n Has odds: " + "***" + league.coverage.odds.toString() + "***" + " \n ",
+                            image: {
+                                url: league.logo ? league.logo : "https://media.api-football.com/flags/gb.svg",
+                                accessibilityText: league.name
+                            },
+                            buttons: [
+                                {
+                                    title: "This is a button",
+                                    openUrlAction: {
+                                        url: "https://assistant.google.com/"
+                                    }
+                                }
+                            ],
+                        };
+                        text = "Got league with name " + league.name;
+                        response = dialogflowResponse.getBasicCardResponse(text, singleItem);
+                    }
                 } else {
                     text = "Couldn't find by ID! Please try again.";
                     response = dialogflowResponse.getSuggestionsResponse(text, suggestions);
