@@ -56,7 +56,7 @@ exports.getMediaResponse = (text, mp3Url) => {
     }
 };
 
-exports.getTableResponse = (text) => {
+exports.getTableResponse = (text, tableCard) => {
   return {
       "payload": {
           "google": {
@@ -69,79 +69,7 @@ exports.getTableResponse = (text) => {
                           }
                       },
                       {
-                          "tableCard": {
-                              "title": "Table Title",
-                              "subtitle": "Table Subtitle",
-                              "image": {
-                                  "url": "https://avatars0.githubusercontent.com/u/23533486",
-                                  "accessibilityText": "Actions on Google"
-                              },
-                              "rows": [
-                                  {
-                                      "cells": [
-                                          {
-                                              "text": "row 1 item 1"
-                                          },
-                                          {
-                                              "text": "row 1 item 2"
-                                          },
-                                          {
-                                              "text": "row 1 item 3"
-                                          }
-                                      ],
-                                      "dividerAfter": false
-                                  },
-                                  {
-                                      "cells": [
-                                          {
-                                              "text": "row 2 item 1"
-                                          },
-                                          {
-                                              "text": "row 2 item 2"
-                                          },
-                                          {
-                                              "text": "row 2 item 3"
-                                          }
-                                      ],
-                                      "dividerAfter": true
-                                  },
-                                  {
-                                      "cells": [
-                                          {
-                                              "text": "row 3 item 1"
-                                          },
-                                          {
-                                              "text": "row 3 item 2"
-                                          },
-                                          {
-                                              "text": "row 3 item 3"
-                                          }
-                                      ]
-                                  }
-                              ],
-                              "columnProperties": [
-                                  {
-                                      "header": "header 1",
-                                      "horizontalAlignment": "CENTER"
-                                  },
-                                  {
-                                      "header": "header 2",
-                                      "horizontalAlignment": "LEADING"
-                                  },
-                                  {
-                                      "header": "header 1",
-                                      "horizontalAlignment": "TRAILING"
-                                  }
-                              ],
-                              "buttons": [
-                                  {
-                                      "title": "Button Title",
-                                      "openUrlAction": {
-                                          "url": "https://github.com/actions-on-google"
-                                      }
-                                  }
-                              ]
-                          }
+                          "tableCard": tableCard
                       }
                   ],
                   "suggestions": [
@@ -187,6 +115,11 @@ exports.getListResponse = (text, listTitle, listSelectItems) => {
                                 "textToSpeech": text
                             }
                         }
+                    ],
+                    "suggestions": [
+                        {
+                            "title": "Back"
+                        }
                     ]
                 },
                 "systemIntent": {
@@ -200,7 +133,58 @@ exports.getListResponse = (text, listTitle, listSelectItems) => {
                     }
                 }
             }
-        }
+        },
+        "outputContexts": [
+            {
+                "name": "projects/kn-vucetinec/agent/sessions/ABwppHGfFkWJdHKPpBEYiGkhdoakWmYj_2sZa4o8pbGG9nj4q5_GfDTtNEXOY34mLX8G4o_d7oZdUW9bnBZC/contexts/_selection_type",
+                "lifespanCount": 99,
+                "parameters": {
+                    "data": "{\"selectionType\":teams}"
+                }
+            }
+        ]
+    }
+};
+
+exports.getCarouselResponse = (text, listSelectItems) => {
+    return {
+        "payload": {
+            "google": {
+                "expectUserResponse": true,
+                "richResponse": {
+                    "items": [
+                        {
+                            "simpleResponse": {
+                                "textToSpeech": text
+                            }
+                        }
+                    ],
+                    "suggestions": [
+                        {
+                            "title": "Back"
+                        }
+                    ]
+                },
+                "systemIntent": {
+                    "intent": "actions.intent.OPTION",
+                    "data": {
+                        "@type": "type.googleapis.com/google.actions.v2.OptionValueSpec",
+                        "carouselSelect": {
+                            "items": listSelectItems
+                        }
+                    }
+                }
+            }
+        },
+        "outputContexts": [
+            {
+                "name": "projects/kn-vucetinec/agent/sessions/ABwppHGfFkWJdHKPpBEYiGkhdoakWmYj_2sZa4o8pbGG9nj4q5_GfDTtNEXOY34mLX8G4o_d7oZdUW9bnBZC/contexts/_selection_type",
+                "lifespanCount": 99,
+                "parameters": {
+                    "data": "{\"selectionType\":leagues}"
+                }
+            }
+        ]
     }
 };
 
@@ -218,6 +202,11 @@ exports.getBasicCardResponse = (text, singleItem) => {
                         },
                         {
                             "basicCard": singleItem
+                        }
+                    ],
+                    "suggestions": [
+                        {
+                            "title": "Back"
                         }
                     ]
                 }

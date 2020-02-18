@@ -26,3 +26,44 @@ exports.getTeam = async (id) => {
         return null;
     })
 };
+
+exports.getAllFixtures = async () => {
+    return firebaseStorageJsonApi.get('/responses%2Ffixtures_of_england.json?alt=media&token=67e2d29d-dc0f-4954-b5d4-de296c9dc9e7').then(response => {
+        console.log(response.data);
+        return response.data;
+    }).catch(error => {
+        console.log(error);
+        return null;
+    })
+};
+
+exports.getFinishedFixtures = async () => {
+    return firebaseStorageJsonApi.get('/responses%2Ffixtures_of_england.json?alt=media&token=67e2d29d-dc0f-4954-b5d4-de296c9dc9e7').then(response => {
+        console.log(response.data);
+        const queryString = 'api[**][*status=Match Finished]';
+        return jsonExtractor.getValuesFromJson(queryString, response.data);
+    }).catch(error => {
+        console.log(error);
+        return null;
+    })
+};
+
+exports.getCountries = async () => {
+    return firebaseStorageJsonApi.get('/responses%2Fcountries_response.json?alt=media&token=c1d06639-5664-4a53-ace6-344e30eb8275').then(response => {
+        console.log(response.data);
+        return response.data;
+    }).catch(error => {
+        console.log(error);
+        return null;
+    })
+};
+
+exports.getLeagues = async () => {
+    return firebaseStorageJsonApi.get('/responses%2Fleagues_of_england.json?alt=media&token=5e177a8d-01b4-49cc-81ae-c3d683d87a6a').then(response => {
+        console.log(response.data);
+        return response.data;
+    }).catch(error => {
+        console.log(error);
+        return null;
+    })
+};

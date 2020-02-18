@@ -20,7 +20,7 @@ exports.myClubImpl = async (req, resp) => {
             const params = req.body.queryResult.parameters;
 
             if (suggestions[0].title.toLowerCase() === detectedIntentName) {
-                text = "Here are the results of the following match:";
+                text = "Here are the results for England:";
                 if (params !== null && params["date-period"]) {
                     const datePeriodParam = params["date-period"];
                     text = "Here are the following following results of played matches from " + datePeriodParam.startDate + " to " + datePeriodParam.endDate;
@@ -34,7 +34,66 @@ exports.myClubImpl = async (req, resp) => {
                         text = "Here are the results of the last match " + lastMatchParam;
                     }
                 }
-                response = dialogflowResponse.getTableResponse(text);
+                // todo add new api call to fixtures
+                const data = await firebaseJson.getFinishedFixtures();
+                if (data) {
+                    console.log("Getting results...");
+                    console.log(data);
+                    const tableHeader = ["Home Team", "Away Team", "Score Home", "Score Away", "Venue", "Datetime"].map(item => {
+                        return {
+                            header: item,
+                            horizontalAlignment: "CENTER"
+                        }
+                    });
+                    const tableRows = data.map((fixture) => {
+                        return {
+                            cells: [
+                                {
+                                    text: fixture.homeTeam.team_name
+                                },
+                                {
+                                    text: fixture.awayTeam.team_name
+                                },
+                                {
+                                    text: fixture.goalsHomeTeam.toString()
+                                },
+                                {
+                                    text: fixture.goalsAwayTeam.toString()
+                                },
+                                {
+                                    text: fixture.venue
+                                },
+                                {
+                                    text: fixture.event_date
+                                }
+                            ],
+                            "dividerAfter": true
+                        }
+                    });
+
+                    const tableCard =  {
+                        "title": "Results of the matches for England",
+                        "subtitle": "Table Subtitle",
+                        "image": {
+                            "url": "https://avatars0.githubusercontent.com/u/23533486",
+                            "accessibilityText": "Actions on Google"
+                        },
+                        "columnProperties": tableHeader,
+                        "rows": tableRows,
+                        "buttons": [
+                            {
+                                "title": "Button Title",
+                                "openUrlAction": {
+                                    "url": "https://github.com/actions-on-google"
+                                }
+                            }
+                        ]
+                    };
+                    response = dialogflowResponse.getTableResponse(text, tableCard);
+                } else {
+                    text = "Something went wrong! Please try again.";
+                    response = dialogflowResponse.getSuggestionsResponse(text, suggestions);
+                }
             } else if (suggestions[1].title.toLowerCase() === detectedIntentName) {
                 text = "Here are the requested matches:";
                 if (params !== null && params["date-period"]) {
@@ -60,7 +119,7 @@ exports.myClubImpl = async (req, resp) => {
                     }
                 }
                 response = dialogflowResponse.getTableResponse(text);
-            } else if (suggestions[2].title === detectedIntentName) {
+            } else if (suggestions[2].title.toLowerCase() === detectedIntentName) {
                 const data = await firebaseJson.getTeams();
 
                 console.log("Printing data of teams: ");
@@ -86,47 +145,144 @@ exports.myClubImpl = async (req, resp) => {
                     text = "Something went wrong! Please try again.";
                     response = dialogflowResponse.getSuggestionsResponse(text, suggestions);
                 }
+            } else if (suggestions[3].title.toLowerCase() === detectedIntentName) {
+                const data = await firebaseJson.getCountries();
+
+                if (data) {
+                    const tableHeader = ["Code", "Name"].map(item => {
+                        return {
+                            header: item,
+                            horizontalAlignment: "CENTER"
+                        }
+                    });
+                    const tableRows = data.api.countries.map((country) => {
+                        return {
+                            cells: [
+                                {
+                                    text: country.country.toLowerCase() === "world" ? "W" : country.code
+                                },
+                                {
+                                    text: country.country
+                                }
+                            ],
+                            "dividerAfter": true
+                        }
+                    });
+
+                    const tableCard =  {
+                        "title": "Countries",
+                        "subtitle": "Available countries",
+                        "image": {
+                            "url": "https://avatars0.githubusercontent.com/u/23533486",
+                            "accessibilityText": "Actions on Google"
+                        },
+                        "columnProperties": tableHeader,
+                        "rows": tableRows,
+                        "buttons": [
+                            {
+                                "title": "Button Title",
+                                "openUrlAction": {
+                                    "url": "https://github.com/actions-on-google"
+                                }
+                            }
+                        ]
+                    };
+
+                    console.log("Printing countries data...");
+                    console.log(data.api.countries);
+
+                    text = "Displaying countries: ";
+                    response = dialogflowResponse.getTableResponse(text, tableCard);
+                } else {
+                    text = "Something went wrong! Please try again.";
+                    response = dialogflowResponse.getSuggestionsResponse(text, suggestions);
+                }
+            } else if (suggestions[4].title.toLowerCase() === detectedIntentName) {
+                const data = await firebaseJson.getLeagues();
+
+                if (data) {
+                    text = "Displaying leagues of England";
+
+                    const leaguesData = data.api.leagues.slice(0, 9).map((league) => {
+                        return {
+                            optionInfo: {
+                                key: league.league_id,
+                                synonyms: [league.name]
+                            },
+                            title: league.name,
+                            description: "League of " + league.country + ", season period " +  league.season_start + " - " + league.season_end,
+                            image: {
+                                url: league.logo ? league.logo : "https://media.api-football.com/flags/gb.svg",
+                                accessibilityText: league.name
+                            }
+                        }
+                    });
+                    response = dialogflowResponse.getCarouselResponse(text, leaguesData)
+                } else {
+                    text = "Something went wrong! Please try again.";
+                    response = dialogflowResponse.getSuggestionsResponse(text, suggestions);
+                }
             } else if (detectedIntentName === 'back') {
                 text = "Is there anything else?";
                 response = dialogflowResponse.getSuggestionsResponse(text, suggestions);
             } else if (detectedIntentName === "DefaultFallbackIntent".toLowerCase() && userInputs[0].intent === 'actions.intent.OPTION') {
+                const outputContexts = req.body.queryResult.outputContexts;
+
+                console.log("Analyzing output context...");
+                console.log(outputContexts);
+
+                const targetOutputContext = outputContexts.filter(item => {
+                    return item.name.includes("_selection_type");
+                })[0];
+
+                console.log("Printing target output context...");
+                console.log(targetOutputContext);
+                const selectionType = targetOutputContext.data;
+                console.log("Retrieved selection type...");
+                console.log(selectionType);
+
                 console.log("Action System Intent: ");
                 console.log(userInputs[0].intent);
 
-                let teamID = -1;
+                let selection = -1;
                 if (userInputs[0].arguments[0].name === 'OPTION') {
-                    teamID = parseInt(userInputs[0].arguments[0].textValue, 10);
+                    selection = parseInt(userInputs[0].arguments[0].textValue, 10);
                 }
 
-                if (teamID > 0) {
-                    const team = await firebaseJson.getTeam(teamID);
-                    console.log("Here is the requested team: ");
-                    console.log(team);
-                    const singleItem = {
-                        title: team.name,
-                        subtitle: team.venue_name,
-                        formattedText: "More Details: " + " \n "
-                            + " \n Country: " + "***"+ team.country+"***" + " \n "
-                            + " \n Founded: " + "***"+ team.founded+"***" + " \n "
-                            + " \n Surface: " + "***"+ team.venue_surface+"***" + " \n "
-                            + " \n Address: " + "***"+ team.venue_address+"***" + " \n "
-                            + " \n City: " + "***"+ team.venue_city+"***" + " \n "
-                            + " \n Capacity: " + "***"+ team.venue_capacity+"***" + " \n ",
-                        image: {
-                            url: team.logo,
-                            accessibilityText: team.name
-                        },
-                        buttons: [
-                            {
-                                title: "This is a button",
-                                openUrlAction: {
-                                    url: "https://assistant.google.com/"
+                if (selection > 0 && selectionType.includes('teams')) {
+                    const team = await firebaseJson.getTeam(selection);
+                    if (team) {
+                        console.log("Here is the requested team: ");
+                        console.log(team);
+                        const singleItem = {
+                            title: team.name,
+                            subtitle: team.venue_name,
+                            formattedText: "More Details: " + " \n "
+                                + " \n Country: " + "***"+ team.country+"***" + " \n "
+                                + " \n Founded: " + "***"+ team.founded+"***" + " \n "
+                                + " \n Surface: " + "***"+ team.venue_surface+"***" + " \n "
+                                + " \n Address: " + "***"+ team.venue_address+"***" + " \n "
+                                + " \n City: " + "***"+ team.venue_city+"***" + " \n "
+                                + " \n Capacity: " + "***"+ team.venue_capacity+"***" + " \n ",
+                            image: {
+                                url: team.logo,
+                                accessibilityText: team.name
+                            },
+                            buttons: [
+                                {
+                                    title: "This is a button",
+                                    openUrlAction: {
+                                        url: "https://assistant.google.com/"
+                                    }
                                 }
-                            }
-                        ],
-                    };
-                    text = "Got team with name " + team.name;
-                    response = dialogflowResponse.getBasicCardResponse(text, singleItem);
+                            ],
+                        };
+                        text = "Got team with name " + team.name;
+                        response = dialogflowResponse.getBasicCardResponse(text, singleItem);
+                    }
+                } else {
+                    text = "Couldn't find by ID! Please try again.";
+                    response = dialogflowResponse.getSuggestionsResponse(text, suggestions);
                 }
             }  else {
                 text = "I didn't understand that. Please choose something from the suggestions.";
