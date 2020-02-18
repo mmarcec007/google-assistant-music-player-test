@@ -237,7 +237,7 @@ exports.myClubImpl = async (req, resp) => {
 
                 console.log("Printing target output context...");
                 console.log(targetOutputContext);
-                const selectionType = targetOutputContext.data;
+                const selectionType = targetOutputContext.parameters.data;
                 console.log("Retrieved selection type...");
                 console.log(selectionType);
 
