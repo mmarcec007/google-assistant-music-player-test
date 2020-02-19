@@ -188,6 +188,30 @@ exports.getCarouselResponse = (text, listSelectItems) => {
     }
 };
 
+exports.getBrowseCarouselResponse = (text, carouselBrowseItems) => {
+    return {
+        "payload": {
+            "google": {
+                "expectUserResponse": true,
+                "richResponse": {
+                    "items": [
+                        {
+                            "simpleResponse": {
+                                "textToSpeech": text
+                            }
+                        },
+                        {
+                            "carouselBrowse": {
+                                "items": carouselBrowseItems
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+};
+
 exports.getBasicCardResponse = (text, singleItem) => {
     return {
         "payload": {
