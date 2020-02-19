@@ -323,17 +323,6 @@ exports.myClubImpl = async (req, resp) => {
                 console.log("Analyzing output context...");
                 console.log(outputContexts);
 
-                const targetOutputContext = dialogflowHelper.getContext(
-                    req.body.queryResult.outputContexts,
-                    "_selection_type"
-                );
-
-                console.log("Printing target output context...");
-                console.log(targetOutputContext);
-                const selectionType = targetOutputContext.parameters.data;
-                console.log("Retrieved selection type...");
-                console.log(selectionType);
-
                 console.log("Action System Intent: ");
                 console.log(userInputs[0].intent);
 
@@ -341,8 +330,8 @@ exports.myClubImpl = async (req, resp) => {
                 if (userInputs[0].arguments[0].name === 'OPTION') {
                     selection = parseInt(userInputs[0].arguments[0].textValue, 10);
                 }
-
-                if (selection > 0 && selectionType.includes('teams')) {
+                const fetchedOutputContexts = req.body.queryResult.outputContexts;
+                if (selection > 0 && dialogflowHelper.isContextAlive(fetchedOutputContexts, "_team_details")) {
                     const team = await firebaseJson.getTeam(selection);
                     if (team) {
                         console.log("Here is the requested team: ");
@@ -373,7 +362,9 @@ exports.myClubImpl = async (req, resp) => {
                         text = "Got team with name " + team.name;
                         response = dialogflowResponse.getBasicCardResponse(text, singleItem);
                     }
-                } else if (selection > 0 && selectionType.includes('leagues')) {
+                }
+
+                if (selection > 0 && dialogflowHelper.isContextAlive(fetchedOutputContexts, "_league_details")) {
                     const league = await firebaseJson.getLeague(selection);
                     if (league) {
                         console.log("Here is the requested league: ");
