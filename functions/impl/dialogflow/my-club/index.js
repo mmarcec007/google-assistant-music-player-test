@@ -1,5 +1,6 @@
 const dialogflowResponse = require('../../../responses/dialogflow/dialogflow');
 const jsonExtractor = require('../../core/helper/json-extractor');
+const dialogflowHelper = require('../../core/helper/dialogflow-helper');
 const baseSuggestions = require('../../core/data/base-suggestions');
 const firebaseJson = require('../../../external-api/firebaseJson');
 const suggestions = jsonExtractor.getValuesFromJson('suggestions', baseSuggestions);
@@ -34,7 +35,7 @@ exports.myClubImpl = async (req, resp) => {
                         text = "Here are the results of the last match " + lastMatchParam;
                     }
                 }
-                // todo add new api call to fixtures
+
                 const data = await firebaseJson.getFinishedFixtures();
                 if (data) {
                     console.log("Getting results...");
@@ -95,7 +96,6 @@ exports.myClubImpl = async (req, resp) => {
                     response = dialogflowResponse.getSuggestionsResponse(text, suggestions);
                 }
             } else if (suggestions[1].title.toLowerCase() === detectedIntentName) {
-                text = "Here are the requested matches:";
                 if (params !== null && params["date-period"]) {
                     const datePeriodParam = params["date-period"];
                     text = "Here are the following matches from " + datePeriodParam.startDate + " to " + datePeriodParam.endDate;
@@ -118,7 +118,64 @@ exports.myClubImpl = async (req, resp) => {
                         text = "Here is the next match " + nextMatchParam;
                     }
                 }
-                response = dialogflowResponse.getTableResponse(text);
+
+                const data = await firebaseJson.getNotStartedFixtures();
+                if (data) {
+                    console.log("Getting results...");
+                    console.log(data);
+                    const tableHeader = ["Home Team", "Away Team", "Round", "Venue", "Datetime"].map(item => {
+                        return {
+                            header: item,
+                            horizontalAlignment: "CENTER"
+                        }
+                    });
+                    const tableRows = data.map((fixture) => {
+                        return {
+                            cells: [
+                                {
+                                    text: fixture.homeTeam.team_name
+                                },
+                                {
+                                    text: fixture.awayTeam.team_name
+                                },
+                                {
+                                    text: fixture.round
+                                },
+                                {
+                                    text: fixture.venue
+                                },
+                                {
+                                    text: fixture.event_date
+                                }
+                            ],
+                            "dividerAfter": true
+                        }
+                    });
+
+                    const tableCard =  {
+                        "title": "Open matches for England",
+                        "subtitle": "Table Subtitle",
+                        "image": {
+                            "url": "https://avatars0.githubusercontent.com/u/23533486",
+                            "accessibilityText": "Actions on Google"
+                        },
+                        "columnProperties": tableHeader,
+                        "rows": tableRows,
+                        "buttons": [
+                            {
+                                "title": "Button Title",
+                                "openUrlAction": {
+                                    "url": "https://github.com/actions-on-google"
+                                }
+                            }
+                        ]
+                    };
+                    text = "Here are the open matches for England:";
+                    response = dialogflowResponse.getTableResponse(text, tableCard);
+                } else {
+                    text = "Something went wrong! Please try again.";
+                    response = dialogflowResponse.getSuggestionsResponse(text, suggestions);
+                }
             } else if (suggestions[2].title.toLowerCase() === detectedIntentName) {
                 const data = await firebaseJson.getTeams();
 
@@ -222,6 +279,41 @@ exports.myClubImpl = async (req, resp) => {
                     text = "Something went wrong! Please try again.";
                     response = dialogflowResponse.getSuggestionsResponse(text, suggestions);
                 }
+            } else if (suggestions[5].title.toLowerCase() === detectedIntentName) {
+                const fetchedVenues = await firebaseJson.getVenues();
+
+                console.log("Printing data of venues: ");
+                console.log(fetchedVenues);
+
+                const webBrowserCapability = dialogflowHelper.getCapability(
+                    req.body.originalDetectIntentRequest.payload.surface.capabilities,
+                    "actions.capability.WEB_BROWSER");
+                if (webBrowserCapability) {
+                    if (fetchedVenues) {
+                        const venueData = fetchedVenues.data.map((venue) => {
+                            return {
+                                title: venue.name,
+                                openUrlAction: {
+                                    url: venue.image_path
+                                },
+                                description: venue.city + ", " + venue.address,
+                                footer: venue.coordinates,
+                                image: {
+                                    url: venue.image_path,
+                                    accessibilityText: venue.name
+                                }
+                            }
+                        });
+                        text = "Here are the venues:";
+                        response = dialogflowResponse.getBrowseCarouselResponse(text, venueData);
+                    } else {
+                        text = "Something went wrong! Please try again.";
+                        response = dialogflowResponse.getSuggestionsResponse(text, suggestions);
+                    }
+                } else {
+                    text = "I can't show venues! I don't have support for web browsers.";
+                    response = dialogflowResponse.getSuggestionsResponse(text, suggestions);
+                }
             } else if (detectedIntentName === 'back') {
                 text = "Is there anything else?";
                 response = dialogflowResponse.getSuggestionsResponse(text, suggestions);
@@ -231,9 +323,10 @@ exports.myClubImpl = async (req, resp) => {
                 console.log("Analyzing output context...");
                 console.log(outputContexts);
 
-                const targetOutputContext = outputContexts.filter(item => {
-                    return item.name.includes("_selection_type");
-                })[0];
+                const targetOutputContext = dialogflowHelper.getContext(
+                    req.body.queryResult.outputContexts,
+                    "_selection_type"
+                );
 
                 console.log("Printing target output context...");
                 console.log(targetOutputContext);
