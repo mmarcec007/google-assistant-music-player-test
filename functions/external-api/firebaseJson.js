@@ -48,6 +48,17 @@ exports.getFinishedFixtures = async () => {
     })
 };
 
+exports.getNotStartedFixtures = async () => {
+    return firebaseStorageJsonApi.get('/responses%2Ffixtures_of_england.json?alt=media&token=67e2d29d-dc0f-4954-b5d4-de296c9dc9e7').then(response => {
+        console.log(response.data);
+        const queryString = 'api[**][*status=Not Started]';
+        return jsonExtractor.getValuesFromJson(queryString, response.data);
+    }).catch(error => {
+        console.log(error);
+        return null;
+    })
+};
+
 exports.getCountries = async () => {
     return firebaseStorageJsonApi.get('/responses%2Fcountries_response.json?alt=media&token=c1d06639-5664-4a53-ace6-344e30eb8275').then(response => {
         console.log(response.data);
@@ -73,6 +84,16 @@ exports.getLeague = async (id) => {
         console.log(response.data);
         const queryString = 'api[**][*league_id='+id+']';
         return jsonExtractor.getSingleValueFromJson(queryString, response.data);
+    }).catch(error => {
+        console.log(error);
+        return null;
+    })
+};
+
+exports.getVenues = async () => {
+    return firebaseStorageJsonApi.get('/responses%2Fvenues_response.json?alt=media&token=5d02fe97-7bb2-4c3e-a5e4-0a4073de86db').then(responses => {
+        console.log(responses.data);
+        return responses.data;
     }).catch(error => {
         console.log(error);
         return null;
